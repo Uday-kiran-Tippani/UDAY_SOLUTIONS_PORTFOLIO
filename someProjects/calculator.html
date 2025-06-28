@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ultimate Calculator</title>
+  <style>
+    :root {
+      --bg: #ffffffcc;
+      --text: #000;
+      --btn: #f0f0f0;
+      --hover: #d4f0f0;
+      --operator: #ffcccb;
+      --equal: #90ee90;
+      --clear: #ffc107;
+      --back: #e57373;
+    }
+
+    body.dark {
+      --bg: #1e1e2fdd;
+      --text: #fff;
+      --btn: #333;
+      --hover: #555;
+      --operator: #ff8a80;
+      --equal: #66bb6a;
+      --clear: #fbc02d;
+      --back: #e53935;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #000428, #004e92);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding-top: 30px;
+      color: var(--text);
+    }
+
+    .animated-bg span {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      opacity: 0.2;
+    }
+
+    .animated-bg span:nth-child(1) {
+      width: 200px; height: 200px;
+      background: #ff6ec4;
+      animation: rotate1 20s linear infinite;
+      top: 10%; left: 10%;
+    }
+
+    .animated-bg span:nth-child(2) {
+      width: 150px; height: 150px;
+      background: #6efeff;
+      animation: rotate2 15s linear infinite;
+      bottom: 10%; right: 15%;
+    }
+
+    .animated-bg span:nth-child(3) {
+      width: 100px; height: 100px;
+      background: #f0f0f0;
+      animation: rotate3 25s linear infinite;
+      top: 50%; left: 70%;
+    }
+
+    @keyframes rotate1 {
+      0% { transform: rotate(0deg) translateX(0); }
+      100% { transform: rotate(360deg) translateX(50px); }
+    }
+
+    @keyframes rotate2 {
+      0% { transform: rotate(0deg) scale(1); }
+      100% { transform: rotate(360deg) scale(1.2); }
+    }
+
+    @keyframes rotate3 {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(360deg); }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .calculator-container {
+      background-color: var(--bg);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      width: 320px;
+      max-width: 90%;
+      z-index: 1;
+    }
+
+    #display {
+      width: 100%;
+      height: 60px;
+      font-size: 2em;
+      text-align: right;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: none;
+      background: #eaf4f4;
+      border-radius: 8px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .btn {
+      font-size: 1.5em;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background-color: var(--btn);
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: var(--hover);
+      transform: scale(1.05);
+    }
+
+    .operator { background-color: var(--operator); }
+    .equal { background-color: var(--equal); }
+    .clear {
+      grid-column: span 2;
+      background-color: var(--clear);
+    }
+
+    .back {
+      grid-column: span 2;
+      background-color: var(--back);
+    }
+
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 320px;
+      max-width: 90%;
+      margin-bottom: 10px;
+    }
+
+    .toggle-mode {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #ffd54f;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .copy-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #aed581;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .history {
+      margin-top: 20px;
+      width: 320px;
+      max-width: 90%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 10px;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 480px) {
+      .btn {
+        font-size: 1.2em;
+        padding: 12px;
+      }
+      #display {
+        font-size: 1.5em;
+        height: 50px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="animated-bg">
+    <span></span><span></span><span></span>
+  </div>
+
+  <h1>CALCULATOR</h1>
+
+  <div class="top-controls">
+    <button class="toggle-mode" onclick="toggleMode()">🌙 Mode</button>
+    <button class="copy-btn" onclick="copyResult()">📋 Copy</button>
+  </div>
+
+  <div class="calculator-container">
+    <input type="text" id="display" disabled />
+    <div class="buttons">
+      <button class="btn" onclick="press('7')">7</button>
+      <button class="btn" onclick="press('8')">8</button>
+      <button class="btn" onclick="press('9')">9</button>
+      <button class="btn operator" onclick="press('/')">÷</button>
+
+      <button class="btn" onclick="press('4')">4</button>
+      <button class="btn" onclick="press('5')">5</button>
+      <button class="btn" onclick="press('6')">6</button>
+      <button class="btn operator" onclick="press('*')">×</button>
+
+      <button class="btn" onclick="press('1')">1</button>
+      <button class="btn" onclick="press('2')">2</button>
+      <button class="btn" onclick="press('3')">3</button>
+      <button class="btn operator" onclick="press('-')">−</button>
+
+      <button class="btn" onclick="press('0')">0</button>
+      <button class="btn" onclick="press('.')">.</button>
+      <button class="btn equal" onclick="calculate()">=</button>
+      <button class="btn operator" onclick="press('+')">+</button>
+
+      <button class="btn clear" onclick="clearDisplay()">C</button>
+      <button class="btn back" onclick="backspace()">⌫</button>
+    </div>
+  </div>
+
+  <div class="history" id="history">
+    <strong>History:</strong>
+    <ul id="history-list"></ul>
+  </div>
+
+  <audio id="click-sound" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
+
+  <script>
+    const display = document.getElementById("display");
+    const historyList = document.getElementById("history-list");
+
+    function press(val) {
+      display.value += val;
+      playSound();
+    }
+
+    function calculate() {
+      try {
+        const result = eval(display.value);
+        addToHistory(display.value + " = " + result);
+        display.value = result;
+        playSound();
+      } catch {
+        display.value = "Error";
+      }
+    }
+
+    function clearDisplay() {
+      display.value = "";
+      playSound();
+    }
+
+    function backspace() {
+      display.value = display.value.slice(0, -1);
+      playSound();
+    }
+
+    function copyResult() {
+      navigator.clipboard.writeText(display.value).then(() => {
+        alert("Copied: " + display.value);
+      });
+    }
+
+    function toggleMode() {
+      document.body.classList.toggle("dark");
+    }
+
+    function addToHistory(entry) {
+      const li = document.createElement("li");
+      li.textContent = entry;
+      historyList.prepend(li);
+      if (historyList.children.length > 10) {
+        historyList.removeChild(historyList.lastChild);
+      }
+    }
+
+    function playSound() {
+      const sound = document.getElementById("click-sound");
+      sound.currentTime = 0;
+      sound.play();
+    }
+
+    document.addEventListener('keydown', function (event) {
+      const key = event.key;
+      if (!isNaN(key) || key === '.' || ['+', '-', '*', '/'].includes(key)) {
+        press(key);
+      } else if (key === 'Enter' || key === '=') {
+        event.preventDefault();
+        calculate();
+      } else if (key === 'Backspace') {
+        backspace();
+      } else if (key.toLowerCase() === 'c') {
+        clearDisplay();
+      }
+    });
+  </script>
+</body>
+</html>

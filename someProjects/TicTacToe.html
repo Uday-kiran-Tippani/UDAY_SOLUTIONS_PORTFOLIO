@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f2f2f2;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    .hidden {
+      display: none;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 10px;
+      margin: 20px auto;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 2.5rem;
+      background: white;
+      border: 2px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .cell:hover {
+      background-color: #e0e0e0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin: 5px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    input {
+      padding: 10px;
+      width: 90%;
+      margin: 5px;
+    }
+    #scoreboard {
+      display: flex;
+      justify-content: space-around;
+      margin: 10px 0;
+      font-size: 1.1rem;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Tic Tac Toe</h1>
+
+  <div id="setup">
+    <h2>Select Game Mode</h2>
+    <button onclick="startSetup('pvp')">One vs One</button>
+    <button onclick="showAIDifficulty()">One vs AI</button>
+  </div>
+
+  <div id="aiDifficulty" class="hidden">
+    <h3>Select AI Difficulty</h3>
+    <button onclick="startSetup('ai', 'easy')">Easy</button>
+    <button onclick="startSetup('ai', 'hard')">Hard</button>
+  </div>
+
+  <div id="nameInput" class="hidden">
+    <input type="text" id="player1" placeholder="Enter Player 1 Name" />
+    <input type="text" id="player2" placeholder="Enter Player 2 Name" />
+    <button onclick="startGame()">Start Game</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <div id="scoreboard">
+      <p><span id="p1Name"></span>: <span id="p1Score">0</span></p>
+      <p><span id="p2Name"></span>: <span id="p2Score">0</span></p>
+    </div>
+
+    <div id="board" class="board"></div>
+    <p id="status" class="status"></p>
+
+    <div class="controls">
+      <button onclick="resetBoard()">Reset Game</button>
+      <button onclick="goHome()">🏠 Home</button>
+      <button onclick="quitGame()">❌ Quit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentPlayer = 'X';
+  let gameActive = true;
+  let gameMode = '';
+  let aiLevel = ''; // "easy" or "hard"
+  let cells = Array(9).fill('');
+  let player1 = '', player2 = '';
+  let scores = { X: 0, O: 0 };
+
+  const board = document.getElementById('board');
+  const status = document.getElementById('status');
+  const setup = document.getElementById('setup');
+  const aiDifficulty = document.getElementById('aiDifficulty');
+  const nameInput = document.getElementById('nameInput');
+  const game = document.getElementById('game');
+  const p1Score = document.getElementById('p1Score');
+  const p2Score = document.getElementById('p2Score');
+  const p1NameLabel = document.getElementById('p1Name');
+  const p2NameLabel = document.getElementById('p2Name');
+
+  const winningCombos = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  function showAIDifficulty() {
+    setup.classList.add('hidden');
+    aiDifficulty.classList.remove('hidden');
+  }
+
+  function startSetup(mode, level = '') {
+    gameMode = mode;
+    aiLevel = level;
+    aiDifficulty.classList.add('hidden');
+    setup.classList.add('hidden');
+    nameInput.classList.remove('hidden');
+    document.getElementById('player1').value = '';
+    document.getElementById('player2').value = '';
+    document.getElementById('player2').placeholder = (mode === 'ai') ? 'Computer' : 'Enter Player 2 Name';
+  }
+
+  function startGame() {
+    player1 = document.getElementById('player1').value || 'Player 1';
+    player2 = (gameMode === 'ai') ? 'Computer' : (document.getElementById('player2').value || 'Player 2');
+
+    p1NameLabel.textContent = player1;
+    p2NameLabel.textContent = player2;
+    scores = { X: 0, O: 0 };
+    updateScores();
+
+    nameInput.classList.add('hidden');
+    game.classList.remove('hidden');
+    resetBoard();
+  }
+
+  function updateScores() {
+    p1Score.textContent = scores['X'];
+    p2Score.textContent = scores['O'];
+  }
+
+  function resetBoard() {
+    cells = Array(9).fill('');
+    gameActive = true;
+    currentPlayer = 'X';
+    board.innerHTML = '';
+    status.textContent = `${currentPlayer === 'X' ? player1 : player2}'s turn`;
+
+    cells.forEach((_, i) => {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.dataset.index = i;
+      cell.addEventListener('click', handleCellClick);
+      board.appendChild(cell);
+    });
+  }
+
+  function handleCellClick(e) {
+    const index = e.target.dataset.index;
+    if (cells[index] !== '' || !gameActive) return;
+
+    cells[index] = currentPlayer;
+    e.target.textContent = currentPlayer;
+
+    if (checkWin()) {
+      status.textContent = `${currentPlayer === 'X' ? player1 : player2} wins!`;
+      scores[currentPlayer]++;
+      updateScores();
+      gameActive = false;
+      return;
+    }
+
+    if (cells.every(c => c !== '')) {
+      status.textContent = "It's a draw!";
+      gameActive = false;
+      return;
+    }
+
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    status.textContent = `${currentPlayer === 'X' ? player1 : player2}'s turn`;
+
+    if (gameMode === 'ai' && currentPlayer === 'O') {
+      setTimeout(() => {
+        const move = aiLevel === 'hard' ? minimax(cells, 'O').index : getRandomMove();
+        const cell = document.querySelector(`.cell[data-index="${move}"]`);
+        handleCellClick({ target: cell });
+      }, 300);
+    }
+  }
+
+  function getRandomMove() {
+    return cells.map((v, i) => v === '' ? i : null).filter(i => i !== null)[Math.floor(Math.random() * cells.filter(c => c === '').length)];
+  }
+
+  function checkWin() {
+    return winningCombos.some(([a,b,c]) => cells[a] && cells[a] === cells[b] && cells[a] === cells[c]);
+  }
+
+  function minimax(newBoard, player) {
+    const availSpots = newBoard.map((val, i) => val === '' ? i : null).filter(i => i !== null);
+
+    if (checkWinner(newBoard, 'X')) return { score: -10 };
+    if (checkWinner(newBoard, 'O')) return { score: 10 };
+    if (availSpots.length === 0) return { score: 0 };
+
+    const moves = [];
+
+    for (let i = 0; i < availSpots.length; i++) {
+      const move = {};
+      move.index = availSpots[i];
+      newBoard[availSpots[i]] = player;
+
+      const result = minimax(newBoard, player === 'O' ? 'X' : 'O');
+      move.score = result.score;
+      newBoard[availSpots[i]] = '';
+      moves.push(move);
+    }
+
+    let bestMove = 0;
+    if (player === 'O') {
+      let bestScore = -Infinity;
+      for (let i = 0; i < moves.length; i++) {
+        if (moves[i].score > bestScore) {
+          bestScore = moves[i].score;
+          bestMove = i;
+        }
+      }
+    } else {
+      let bestScore = Infinity;
+      for (let i = 0; i < moves.length; i++) {
+        if (moves[i].score < bestScore) {
+          bestScore = moves[i].score;
+          bestMove = i;
+        }
+      }
+    }
+
+    return moves[bestMove];
+  }
+
+  function checkWinner(board, player) {
+    return winningCombos.some(([a,b,c]) => board[a] === player && board[b] === player && board[c] === player);
+  }
+
+  function goHome() {
+    game.classList.add('hidden');
+    setup.classList.remove('hidden');
+  }
+
+  function quitGame() {
+    game.classList.add('hidden');
+    setup.classList.remove('hidden');
+    nameInput.classList.add('hidden');
+    p1NameLabel.textContent = '';
+    p2NameLabel.textContent = '';
+    p1Score.textContent = '0';
+    p2Score.textContent = '0';
+  }
+</script>
+</body>
+</html>

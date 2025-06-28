@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UDAY SOLUTIONS LANDING PAGE</title>
+  <link rel="shortcut icon" href="images/us.webp" type="image/x-icon">
+
+
+
+    <!-- META TAGS FOR S.E.O -->    
+<!-- SEO Meta Tags -->
+      <meta name="description" content="Uday Kiran Tippani - Programmer, Graphic Designer, Full Stack Developer. Explore portfolio, experience, and projects at Uday Solutions." />
+      <meta name="keywords" content="Uday Kiran Tippani, Uday Solutions, programmer, graphic designer, full stack developer, MCA, portfolio, web development, UI UX designer, creative designer" />
+      <meta name="author" content="Uday Kiran Tippani" />
+
+      <!-- Open Graph Meta Tags -->
+      <meta property="og:title" content="Uday Solutions - Uday Kiran Tippani Portfolio" />
+      <meta property="og:description" content="Explore the portfolio and works of Uday Kiran Tippani - programmer, designer, and creative professional." />
+      <meta property="og:image" content="https://udaysolutions.netlify.app/images/UDAY.png" />
+      <meta property="og:url" content="https://udaysolutions.netlify.app" />
+      <meta property="og:type" content="website" />
+
+      <!-- Twitter Card Meta Tags -->
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Uday Solutions - Uday Kiran Tippani Portfolio" />
+      <meta name="twitter:description" content="Explore the works, experience, and creative portfolio of Uday Kiran Tippani." />
+      <meta name="twitter:image" content="https://udaysolutions.netlify.app/images/UDAY.png" />
+  <style>
+    @font-face {
+      font-family: robot;
+      src: url(fonts/Robot_Font.otf);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    spline-viewer {
+      height: 100%;
+      width: 100%;
+    }
+
+    #btn{
+      background-color: rgba(255, 255, 255, 0.37);
+      color: black;
+      position: absolute;
+      bottom: 100px;
+      right: 100px;
+      padding: 20px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      animation-duration: 5s;
+      opacity: 1;
+      display: block;
+      transition: all 0.5s ease-in-out;
+      font-family: robot;
+      letter-spacing: 5px;
+      font-size: 0.7rem;
+      backdrop-filter: blur(10px);
+    }
+
+    #btn:hover {
+      box-shadow: 0px 0px 20px rgba(184, 213, 224, 0.548);
+      scale: 102%;
+    }
+
+    .rect {
+      height: 10vh;
+      width: 20vw;
+      background-color: #e3e3e3;
+      position: fixed;
+      right: -10px;
+      bottom: 15px;
+      z-index: 4;
+    }
+
+    @media screen and (max-width: 830px) {
+      .rect {
+        width: 100%;
+        left: 0px;
+      }
+
+      #btn {
+        position: fixed;
+        bottom: 20px;
+        right: 90px;
+        z-index: 5;
+        text-align: center;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .rect {
+        width: 200px;
+        left: 0px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #btn {
+        width: 100%;
+        right: 0px;
+      }
+      #user-instructions{
+        font-size: 1.5rem;
+        text-align: center;
+      }
+    }
+    #user-instructions{
+      height:max-content;
+      font-family: robot;
+      width:fit-content;
+      font-size: 0.5rem;
+      letter-spacing: 3px;
+      background-color: rgba(255, 255, 255, 0.37);
+      color: black;
+      position: absolute;
+      top: 10px;
+      padding: 10px;
+      left: 10px;
+      z-index: 5;
+      border-radius: 20px;
+      /* animation-name: visibility; */
+      opacity: 0;
+      animation-duration: 5s;
+      transition: all 0.5s ease;
+    }
+    @keyframes visibility{
+      from{
+        opacity: 0;
+      }
+      to{
+        opacity: 1;
+      }
+    }
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000 url('images/loader.gif') no-repeat center center;
+  z-index: 9999;
+}
+  </style>
+</head>
+<body>
+<div id="preloader"></div>
+  <div  id="user-instructions">
+    <p>HEY! TOUCH ON ANYWHERE OF THE SCREEN TO EXPLORE!</p>
+  </div>
+ 
+
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.14/build/spline-viewer.js"></script>
+<spline-viewer url="https://prod.spline.design/yFH2pqDQ27onxjEa/scene.splinecode"></spline-viewer>
+
+<div class="rect"></div>
+
+<a href="Home.html">
+  <input id="btn" type="button" value="GET INTO TOUCH">
+</a>
+
+
+<!-- ✅ Audio Elements -->
+<audio id="audio1" src="audios/WELCOME_TO_THE_UDHAY.mp3"></audio>
+<audio id="audio2" src="audios/LETS_GET_INTO_TOUCH.mp3"></audio>
+<audio id="audio3" src="audios/Uday_Solutions_Where.mp3"></audio>
+<audio id="audio4" src="audios/Hovering_again_I_see.mp3"></audio>
+<audio id="audio5" src="audios/Creativity_loading_D.mp3"></audio>
+<script>
+  const audio1 = document.getElementById('audio1');
+  const audio2 = document.getElementById('audio2');
+  const audio3 = document.getElementById('audio3');
+  const audio4 = document.getElementById('audio4');
+  const audio5 = document.getElementById('audio5');
+  const button = document.getElementById('btn');
+
+  const ui = document.getElementById("user-instructions");
+
+    document.addEventListener("DOMContentLoaded", function(){
+      setTimeout(() => {
+        ui.style.animationName = "visibility";
+        ui.style.opacity = "1";
+      }, 5000);
+      
+    });
+
+
+
+  let sequenceStarted = false;
+ 
+  function playAudioWithDelay(audio, delay, callback) {
+    setTimeout(() => {
+      audio.play().then(() => {
+        audio.addEventListener('ended', () => {
+          if (callback) callback();
+        }, { once: true });
+      }).catch(err => console.log(`Error playing ${audio.id}:`, err));
+    }, delay);
+  }
+
+  function startAudioLoop() {
+    // Step 1: Play audio1 immediately
+    audio1.play().then(() => {
+      audio1.addEventListener('ended', () => {
+        // Step 2: After 2s, play audio2
+        playAudioWithDelay(audio2, 2000, () => {
+          // Step 3: After 4s, play audio3
+          playAudioWithDelay(audio3, 4000, () => {
+            // Step 4: After 4s, play audio4
+            playAudioWithDelay(audio4, 4000, () => {
+              // Step 5: After 4s, play audio5
+              playAudioWithDelay(audio5, 4000, () => {
+                // 🔁 Loop back to start
+                startAudioLoop();
+              });
+            });
+          });
+        });
+      }, { once: true });
+    }).catch(err => console.log("Audio1 play error:", err));
+  }
+
+  function startSequenceOnce() {
+    if (sequenceStarted) return;
+    sequenceStarted = true;
+
+    // Start looping sequence
+    startAudioLoop();
+
+    // Remove interaction listeners
+    document.removeEventListener('click', startSequenceOnce);
+    document.removeEventListener('keydown', startSequenceOnce);
+  }
+
+  // ⏯️ Start on first interaction
+  document.addEventListener('click', startSequenceOnce);
+  document.addEventListener('keydown', startSequenceOnce);
+
+  // 🎯 Hover on button plays audio2
+  button.addEventListener('mouseenter', () => {
+    audio2.currentTime = 0;
+    audio2.play().catch(err => console.log("Hover audio2 play error:", err));
+  });
+
+  // PRE LODDER ANIMATION
+
+  window.addEventListener('load', () => {
+  document.getElementById('preloader').style.display = 'none';
+});
+</script>
+
+</body>
+</html>

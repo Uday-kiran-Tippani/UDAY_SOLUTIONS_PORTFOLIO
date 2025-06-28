@@ -1,0 +1,250 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #83a4d4, #b6fbff);
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+h1 {
+  color: #003366;
+  margin-bottom: 10px;
+}
+.clock {
+  font-size: 1.2em;
+  color: #222;
+  margin-bottom: 20px;
+}
+.weather-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 10px;
+}
+.card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+  transform: scale(1.05);
+}
+.card h2 {
+  margin: 0;
+  font-size: 1.5em;
+  color: #444;
+}
+.temp {
+  font-size: 2em;
+  color: #0077b6;
+  margin: 10px 0;
+}
+.description {
+  font-size: 1.1em;
+  color: #666;
+}
+.card img {
+  width: 70px;
+  margin-top: 10px;
+}
+
+/* Modal for weather effects */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.modal.hidden {
+  display: none;
+}
+.effect-container {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  animation: fadeIn 1s ease-in-out;
+}
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background: white;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: 50%;
+  z-index: 10000;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Toggle for °C/°F */
+.toggle-container {
+  margin: 10px 0 20px 0;
+}
+.toggle-label {
+  font-size: 1rem;
+  margin-left: 10px;
+}
+#search-input{
+  height: 10vh;
+  width: 50%;
+  border: none;
+  border-radius: 25px;
+  padding: 10px;
+  margin: 5px;
+  font-size: 1.2rem;
+   box-shadow: 10px 10px 50px;
+}
+#search-input:hover{
+  box-shadow: 10px 10px 50px green;
+}
+#btn{
+  height: 10vh;
+  width:10% ;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.2rem;
+}
+#btn:hover{
+  box-shadow: 0px 0px 50px rgb(86, 253, 64);
+}
+
+.datetime-container {
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  color: #003366;
+  /* float: left; */
+  margin: 0;
+}
+
+.date {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.unit-toggle-container {
+  display: inline-flex;
+  position: relative;
+  border: 2px solid #0077b6;
+  border-radius: 25px;
+  overflow: hidden;
+  width: 150px;
+  justify-content: space-between;
+  background: #e0f7fa;
+  margin: 15px auto 30px;
+  height: 40px;
+
+}
+
+.unit-option {
+  flex: 1;
+  text-align: center;
+  line-height: 36px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #003366;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.unit-option input {
+  display: none;
+}
+
+.unit-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 50%;
+  height: 36px;
+  background-color: #0077b6;
+  border-radius: 25px;
+  transition: left 0.3s ease;
+  z-index: 1;
+}
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+  .weather-cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  #search-input {
+    width: 80%;
+    height: 50px;
+    font-size: 1rem;
+  }
+
+  #btn {
+    width: 80%;
+    height: 50px;
+    margin-top: 10px;
+    font-size: 1rem;
+  }
+
+  .unit-toggle-container {
+    width: 100%;
+    height: 40px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .unit-option {
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Even smaller screens (phones) */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .date,
+  .clock {
+    font-size: 1rem;
+  }
+
+  #search-input {
+    width: 100%;
+  }
+
+  #btn {
+    width: 100%;
+  }
+
+  .unit-toggle-container {
+    flex-direction: column;
+    height: auto;
+    padding: 5px;
+  }
+
+  .unit-option {
+    line-height: 30px;
+  }
+
+  .unit-slider {
+    display: none; /* fallback on smaller screens */
+  }
+}

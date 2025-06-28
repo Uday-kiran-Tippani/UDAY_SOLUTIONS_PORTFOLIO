@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Global Weather Updates</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    
+   <a href="weatherApp.html" style="text-decoration: none;"> <h1>🌍 Global Weather Dashboard</h1></a>
+<div class="datetime-container">
+  <div id="current-date" class="date"></div>
+  <div id="clock" class="clock"></div>
+</div>
+
+<!-- Temperature Unit Toggle -->
+<div class="unit-toggle-container">
+  <label class="unit-option">
+    <input type="radio" name="unit" value="celsius" id="celsius-radio" checked />
+    <span>°C</span>
+  </label>
+  <label class="unit-option">
+    <input type="radio" name="unit" value="fahrenheit" id="fahrenheit-radio" />
+    <span>°F</span>
+  </label>
+  <div class="unit-slider" id="unit-slider"></div>
+</div>
+
+
+    <!-- Search Box -->
+<form id="search-form" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+  <input type="text" id="search-input" placeholder="Enter city name..." required />
+  <button type="submit" id="btn">Search</button>
+</form>
+
+
+    <!-- Search Result -->
+    <div id="search-result" class="weather-cards"></div>
+
+    <!-- Predefined Global Cities -->
+    <h2 style="margin-top: 40px;">🌐 Global Cities</h2>
+    <div id="weather-container" class="weather-cards"></div>
+  </div>
+
+  <!-- Weather Effect Modal -->
+  <div id="weather-modal" class="modal hidden">
+    <div class="effect-container" id="effect-container"></div>
+    <button class="close-btn" onclick="closeModal()">✖</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

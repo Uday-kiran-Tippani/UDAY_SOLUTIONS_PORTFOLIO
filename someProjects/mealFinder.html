@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meal Finder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header a {
+      text-decoration: none;
+      color: white;
+    }
+
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 20px;
+    }
+
+    form, #area-selector {
+      margin-top: 10px;
+    }
+
+    input, select {
+      padding: 10px;
+      width: 250px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #fff;
+      color: #ff7043;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ffe0b2;
+    }
+
+    #meals-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .meal {
+      background: white;
+      border-radius: 8px;
+      margin: 15px;
+      width: 250px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .meal:hover {
+      transform: scale(1.05);
+    }
+
+    .meal img {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .meal h3 {
+      padding: 10px;
+    }
+
+    #meal-details {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 700px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    footer {
+      padding: 10px;
+      background: #ff7043;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#"><h1>🍽️ Meal Finder</h1></a>
+
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Search for a meal..." required />
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="area-selector">
+      <label for="area">🌍 Choose Cuisine: </label>
+      <select id="area">
+        <option value="">-- Select Region --</option>
+        <option value="Indian">Indian</option>
+        <option value="Italian">Italian</option>
+        <option value="Mexican">Mexican</option>
+        <option value="Chinese">Chinese</option>
+        <option value="French">French</option>
+        <option value="American">American</option>
+        <option value="Japanese">Japanese</option>
+        <option value="Thai">Thai</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <section id="meals-container"></section>
+    <section id="meal-details" class="hidden"></section>
+  </main>
+
+  <footer>
+    <p>Made by Uday | Powered by TheMealDB API</p>
+  </footer>
+
+  <script>
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    const mealsContainer = document.getElementById('meals-container');
+    const mealDetails = document.getElementById('meal-details');
+    const areaDropdown = document.getElementById('area');
+
+    // Load Indian meals by default
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchMealsByArea('Indian');
+    });
+
+    // Dropdown selection
+    areaDropdown.addEventListener('change', () => {
+      const selectedArea = areaDropdown.value;
+      if (selectedArea) {
+        fetchMealsByArea(selectedArea);
+      }
+    });
+
+    // Search meals
+    searchForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (query) {
+        searchMeals(query);
+      }
+    });
+
+    // Fetch meals by area
+    function fetchMealsByArea(area) {
+      fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`)
+        .then(res => res.json())
+        .then(data => {
+          displayBasicMealCards(data.meals.slice(0, 10));
+        });
+    }
+
+    // Search API
+    function searchMeals(query) {
+      fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`)
+        .then(res => res.json())
+        .then(data => {
+          displayMeals(data.meals);
+        });
+    }
+
+    // Display meals from search
+    function displayMeals(meals) {
+      mealsContainer.innerHTML = '';
+      mealDetails.classList.add('hidden');
+
+      if (!meals) {
+        mealsContainer.innerHTML = '<p>No meals found.</p>';
+        return;
+      }
+
+      meals.forEach(meal => {
+        const mealEl = document.createElement('div');
+        mealEl.classList.add('meal');
+        mealEl.innerHTML = `
+          <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
+          <h3>${meal.strMeal}</h3>
+          <button onclick="getMealDetails(${meal.idMeal})">View Recipe</button>
+        `;
+        mealsContainer.appendChild(mealEl);
+      });
+    }
+
+    // Display from dropdown (basic data)
+    function displayBasicMealCards(meals) {
+      mealsContainer.innerHTML = '';
+      mealDetails.classList.add('hidden');
+
+      meals.forEach(meal => {
+        const mealEl = document.createElement('div');
+        mealEl.classList.add('meal');
+        mealEl.innerHTML = `
+          <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
+          <h3>${meal.strMeal}</h3>
+          <button onclick="getMealDetails(${meal.idMeal})">View Recipe</button>
+        `;
+        mealsContainer.appendChild(mealEl);
+      });
+    }
+
+    // Get meal details
+    function getMealDetails(id) {
+      fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+        .then(res => res.json())
+        .then(data => {
+          const meal = data.meals[0];
+          showMealDetails(meal);
+        });
+    }
+
+    // Show detailed recipe
+    function showMealDetails(meal) {
+      mealDetails.classList.remove('hidden');
+      mealDetails.innerHTML = `
+        <h2>${meal.strMeal}</h2>
+        <img src="${meal.strMealThumb}" alt="${meal.strMeal}" width="300"/>
+        <p><strong>Category:</strong> ${meal.strCategory}</p>
+        <p><strong>Area:</strong> ${meal.strArea}</p>
+        <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+        <a href="${meal.strYoutube}" target="_blank">📺 Watch on YouTube</a>
+      `;
+      window.scrollTo({ top: mealDetails.offsetTop, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
